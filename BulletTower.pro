@@ -33,40 +33,12 @@ INCLUDEPATH+=/usr/local/include/bullet
 INCLUDEPATH+=/usr/local/include
 LIBS+= -L/usr/local/lib -lBulletDynamics  -lBulletCollision  -lLinearMath
 
-# use this to suppress some warning from boost
-QMAKE_CXXFLAGS_WARN_ON += "-Wno-unused-parameter"
-QMAKE_CXXFLAGS+= -msse -msse2 -msse3
-macx:QMAKE_CXXFLAGS+= -arch x86_64
-macx:INCLUDEPATH+=/usr/local/include/
-linux-g++:QMAKE_CXXFLAGS +=  -march=native
-linux-g++-64:QMAKE_CXXFLAGS +=  -march=native
-# define the _DEBUG flag for the graphics lib
-DEFINES +=NGL_DEBUG
-
-unix:LIBS += -L/usr/local/lib
-# add the ngl lib
-unix:LIBS +=  -L/$(HOME)/NGL/lib -l NGL
-
-# now if we are under unix and not on a Mac (i.e. linux) define GLEW
-linux-*{
-		linux-*:QMAKE_CXXFLAGS +=  -march=native
-		linux-*:DEFINES+=GL42
-		DEFINES += LINUX
+NGLPATH=$$(NGLDIR)
+isEmpty(NGLPATH){ # note brace must be here
+	message("including $HOME/NGL")
+	include($(HOME)/NGL/UseNGL.pri)
 }
-DEPENDPATH+=include
-# if we are on a mac define DARWIN
-macx:DEFINES += DARWIN
-# this is where to look for includes
-INCLUDEPATH += $$(HOME)/NGL/include/
-
-win32: {
-				PRE_TARGETDEPS+=C:/NGL/lib/NGL.lib
-				INCLUDEPATH+=-I c:/boost
-				DEFINES+=GL42
-				DEFINES += WIN32
-				DEFINES+=_WIN32
-				DEFINES+=_USE_MATH_DEFINES
-				LIBS += -LC:/NGL/lib/ -lNGL
-				DEFINES+=NO_DLL
+else{ # note brace must be here
+	message("Using custom NGL location")
+	include($(NGLDIR)/UseNGL.pri)
 }
-
