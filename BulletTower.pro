@@ -12,13 +12,11 @@ MOC_DIR=moc
 CONFIG-=app_bundle
 QT+=gui opengl core
 SOURCES+= src/main.cpp \
-					src/OpenGLWindow.cpp \
 					src/NGLScene.cpp \
 					src/PhysicsWorld.cpp \
 					src/CollisionShape.cpp
 
-HEADERS+= include/OpenGLWindow.h \
-					include/NGLScene.h \
+HEADERS+= include/NGLScene.h \
 					include/PhysicsWorld.h \
 					include/CollisionShape.h
 
