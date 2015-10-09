@@ -101,11 +101,9 @@ void NGLScene::addSphere()
 
 NGLScene::~NGLScene()
 {
-  ngl::NGLInit *Init = ngl::NGLInit::instance();
   std::cout<<"Shutting down NGL, removing VAO's and Shaders\n";
   delete m_text;
   delete m_physics;
-  Init->NGLQuit();
 
 }
 
