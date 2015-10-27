@@ -10,15 +10,14 @@ include_directories(/usr/local/include/bullet)
 #the file(GLOB...) allows for wildcard additions of our src dir
 set(SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp  
 			${PROJECT_SOURCE_DIR}/src/NGLScene.cpp  
-			${PROJECT_SOURCE_DIR}/src/OpenGLWindow.cpp
 			${PROJECT_SOURCE_DIR}/src/CollisionShape.cpp  
 			${PROJECT_SOURCE_DIR}/src/PhysicsWorld.cpp
 			${PROJECT_SOURCE_DIR}/include/NGLScene.h  
-			${PROJECT_SOURCE_DIR}/include/OpenGLWindow.h
 			${PROJECT_SOURCE_DIR}/include/CollisionShape.h
 			${PROJECT_SOURCE_DIR}/include/PhysicsWorld.h
-
 )
+# use C++ 11
+set(CMAKE_CXX_STANDARD 11)
 
 # see what platform we are on and set platform defines
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
