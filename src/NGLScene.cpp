@@ -102,19 +102,17 @@ void NGLScene::addSphere()
 NGLScene::~NGLScene()
 {
   std::cout<<"Shutting down NGL, removing VAO's and Shaders\n";
-  delete m_text;
   delete m_physics;
 
 }
 
-void NGLScene::resizeGL(int _w, int _h)
+void NGLScene::resizeGL(QResizeEvent *_event)
 {
-  // set the viewport for openGL we need to take into account retina display
-  // etc by using the pixel ratio as a multiplyer
-  glViewport(0,0,_w*devicePixelRatio(),_h*devicePixelRatio());
+  m_width=_event->size().width()*devicePixelRatio();
+  m_height=_event->size().height()*devicePixelRatio();
+
   // now set the camera size values as the screen size has changed
-  m_cam->setShape(45.0f,(float)width()/height(),0.05f,350.0f);
-  update();
+  m_cam.setShape(45.0f,(float)width()/height(),0.05f,350.0f);
 }
 
 
@@ -142,24 +140,24 @@ void NGLScene::initializeGL()
   // grab an instance of shader manager
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)["nglToonShader"]->use();
-  shader->setShaderParam4f("Colour",1,1,1,1);
+  shader->setShaderParam4f("Colour",1.0f,1.0f,1.0f,1.0f);
 
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1,1,0,1);
-  shader->setShaderParam3f("lightPos",1,1,1);
-  shader->setShaderParam4f("lightDiffuse",1,1,1,1);
+  shader->setShaderParam4f("Colour",1.0f,1.0f,0.0f,1.0f);
+  shader->setShaderParam3f("lightPos",1.0f,1.0f,1.0f);
+  shader->setShaderParam4f("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
   // Now we will create a basic Camera from the graphics library
   // This is a static camera so it only needs to be set once
   // First create Values for the camera position
-  ngl::Vec3 from(0,0,60);
-  ngl::Vec3 to(0,0,0);
-  ngl::Vec3 up(0,1,0);
+  ngl::Vec3 from(0.0f,0.0f,60.0f);
+  ngl::Vec3 to(0.0f,0.0f,0.0f);
+  ngl::Vec3 up(0.0f,1.0f,0.0f);
   // now load to our new camera
-  m_cam= new ngl::Camera(from,to,up);
+  m_cam.set(from,to,up);
   // set the shape using FOV 45 Aspect Ratio based on Width and Height
   // The final two are near and far clipping planes of 0.5 and 10
-  m_cam->setShape(50,(float)720.0/576.0,0.05,350);
+  m_cam.setShape(50,(float)720.0f/576.0f,0.05f,350.0f);
 
   ngl::VAOPrimitives *prim = ngl::VAOPrimitives::instance();
   prim->createSphere("sphere",0.5,40);
@@ -168,7 +166,7 @@ void NGLScene::initializeGL()
  startTimer(10);
   // as re-size is not explicitly called we need to do this.
   glViewport(0,0,width(),height());
-  m_text = new  ngl::Text(QFont("Arial",18));
+  m_text.reset(new  ngl::Text(QFont("Arial",18)));
   m_text->setScreenSize(this->size().width(),this->size().height());
   m_x=0.0f;
   m_y=10.0f;
@@ -184,8 +182,8 @@ void NGLScene::loadMatricesToShader()
   ngl::Mat4 MVP;
   ngl::Mat3 normalMatrix;
 
-  MV=  m_bodyTransform*m_globalTransformMatrix*m_cam->getViewMatrix();
-  MVP= MV*m_cam->getVPMatrix();
+  MV=  m_bodyTransform*m_globalTransformMatrix*m_cam.getViewMatrix();
+  MVP= MV*m_cam.getVPMatrix();
   normalMatrix=MV;
   normalMatrix.inverse();
   shader->setRegisteredUniform("MVP",MVP);
@@ -196,7 +194,7 @@ void NGLScene::paintGL()
 {
   // clear the screen and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+  glViewport(0,0,m_width,m_height);
   // grab an instance of the shader manager
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)["nglDiffuseShader"]->use();

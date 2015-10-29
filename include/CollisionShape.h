@@ -5,10 +5,11 @@
 /// shapes this is a singleton so we only have one instance of
 /// each shape.
 ///
-#include <ngl/Singleton.h>
 #include <btBulletDynamicsCommon.h>
-#include <map>
+#include <unordered_map>
+#include <memory>
 #include <string>
+#include <ngl/Types.h>
 class CollisionShape
 {
 
@@ -24,11 +25,10 @@ class CollisionShape
     btCollisionShape* getShape(const std::string &_name);
   private :
     CollisionShape(){}
-    CollisionShape(const CollisionShape &_c){NGL_UNUSED(_c);}
-    CollisionShape & operator=(const CollisionShape &_c){NGL_UNUSED(_c);}
+    CollisionShape(const CollisionShape &_c)=delete;
+    CollisionShape & operator=(const CollisionShape &_c)=delete;
 
-    std::map <std::string,btCollisionShape*> m_shapes;
-    static CollisionShape *s_instance;
+    std::unordered_map <std::string,std::unique_ptr<btCollisionShape>> m_shapes;
 };
 
 
