@@ -10,8 +10,7 @@
 #include <ngl/Vec3.h>
 #include <ngl/Mat4.h>
 #include <ngl/Obj.h>
-#include "NGLScene.h"
-
+#include <memory>
 
 class PhysicsWorld
 {
