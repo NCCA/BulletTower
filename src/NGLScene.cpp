@@ -54,7 +54,8 @@ NGLScene::NGLScene()
   addCube();
   m_radius=20;
   m_firePos.set(cos(ngl::radians((m_rot)))*m_radius, m_y, sin(ngl::radians(m_rot))*m_radius);
-
+  m_width=1024;
+  m_height=720;
 
 }
 const static float EXT=5.0f;
@@ -131,10 +132,6 @@ void NGLScene::initializeGL()
   glClearColor(0.4f, 0.4f, 0.4f, 1.0f);			   // Grey Background
   // enable depth testing for drawing
   glEnable(GL_DEPTH_TEST);
-  // we need to initialise the NGL lib, under windows and linux we also need to
-  // initialise GLEW, under windows this needs to be done in the app as well
-  // as the lib hence the WIN32 define
-  ngl::NGLInit::instance();
 
   // now to load the shader and set the values
   // grab an instance of shader manager
