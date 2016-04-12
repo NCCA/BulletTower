@@ -23,8 +23,7 @@ HEADERS+= include/NGLScene.h \
 INCLUDEPATH +=./include
 
 DESTDIR=./
-OTHER_FILES+= shaders/PhongFragment.glsl \
-							shaders/PhongVertex.glsl
+
 CONFIG += console
 CONFIG -= app_bundle
 INCLUDEPATH+=/usr/local/include/bullet
