@@ -11,14 +11,16 @@ isEqual(QT_MAJOR_VERSION, 5) {
 MOC_DIR=moc
 CONFIG-=app_bundle
 QT+=gui opengl core
-SOURCES+= src/main.cpp \
-					src/NGLScene.cpp \
-					src/PhysicsWorld.cpp \
-					src/CollisionShape.cpp
+SOURCES+= $$PWD/src/main.cpp \
+          $$PWD/src/NGLScene.cpp \
+          $$PWD/src/PhysicsWorld.cpp \
+          $$PWD/src/CollisionShape.cpp
 
-HEADERS+= include/NGLScene.h \
-					include/PhysicsWorld.h \
-					include/CollisionShape.h
+HEADERS+= $$PWD/include/NGLScene.h \
+          $$PWD/include/PhysicsWorld.h \
+          $$PWD/include/CollisionShape.h \
+          $$PWD/include/WindowParams.h
+
 
 INCLUDEPATH +=./include
 

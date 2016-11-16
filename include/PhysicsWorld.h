@@ -1,5 +1,5 @@
-#ifndef PHYSICSWORLD_H__
-#define PHYSICSWORLD_H__
+#ifndef PHYSICSWORLD_H_
+#define PHYSICSWORLD_H_
 
 //----------------------------------------------------------------------------------------------------------------------
 /// @brief this is a minimal Facade wrapper for the code here
@@ -28,15 +28,15 @@ class PhysicsWorld
     //----------------------------------------------------------------------------------------------------------------------
     void reset();
 
-    inline void setGravity(float _x, float _y, float _z)
+    void setGravity(float _x, float _y, float _z)
     {
       m_dynamicsWorld->setGravity(btVector3(_x,_y,_z));
     }
-    inline void setGravity(ngl::Vec3 _g)
+    void setGravity(ngl::Vec3 _g)
     {
       m_dynamicsWorld->setGravity(btVector3(_g.m_x,_g.m_y,_g.m_z));
     }
-    inline std::string getBodyNameAtIndex(unsigned int i) const{return m_bodies[i].name;}
+    std::string getBodyNameAtIndex(unsigned int i) const{return m_bodies[i].name;}
 
     void addGroundPlane(const ngl::Vec3 &_pos,const ngl::Vec3 &_g);
 
@@ -44,7 +44,7 @@ class PhysicsWorld
     void addBox(std::string _shapeName,const ngl::Vec3 &_pos,const ngl::Vec3 &_axis, ngl::Real _angle);
     void step(float _time, float _step);
 
-    inline unsigned int getNumCollisionObjects()const
+    int getNumCollisionObjects()const
     {
       return m_dynamicsWorld->getNumCollisionObjects();
     }
