@@ -118,12 +118,12 @@ void NGLScene::initializeGL()
   // grab an instance of shader manager
   ngl::ShaderLib *shader=ngl::ShaderLib::instance();
   (*shader)["nglToonShader"]->use();
-  shader->setShaderParam4f("Colour",1.0f,1.0f,1.0f,1.0f);
+  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
   (*shader)["nglDiffuseShader"]->use();
-  shader->setShaderParam4f("Colour",1.0f,1.0f,0.0f,1.0f);
-  shader->setShaderParam3f("lightPos",1.0f,1.0f,1.0f);
-  shader->setShaderParam4f("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
+  shader->setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
+  shader->setUniform("lightPos",1.0f,1.0f,1.0f);
+  shader->setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
   // Now we will create a basic Camera from the graphics library
   // This is a static camera so it only needs to be set once
@@ -164,8 +164,8 @@ void NGLScene::loadMatricesToShader()
   MVP= MV*m_cam.getVPMatrix();
   normalMatrix=MV;
   normalMatrix.inverse();
-  shader->setRegisteredUniform("MVP",MVP);
-  shader->setRegisteredUniform("normalMatrix",normalMatrix);
+  shader->setUniform("MVP",MVP);
+  shader->setUniform("normalMatrix",normalMatrix);
 }
 
 void NGLScene::paintGL()
@@ -203,18 +203,18 @@ void NGLScene::paintGL()
     ngl::Mat4 scale;
     scale.scale(BOXW,BOXH,BOXD);
 
-    shader->setRegisteredUniform("Colour",0.0f,0.0f,1.0f,1.0f);
+    shader->setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
     switch(m_physics->getCollisionShape(i))
     {
       case BOX_SHAPE_PROXYTYPE :
-        shader->setRegisteredUniform("Colour",1.0f,0.0f,0.0f,1.0f);
+        shader->setUniform("Colour",1.0f,0.0f,0.0f,1.0f);
         m_bodyTransform*=scale;
         loadMatricesToShader();
 
         prim->draw("cube");
       break;
       case SPHERE_SHAPE_PROXYTYPE :
-        shader->setRegisteredUniform("Colour",0.0f,1.0f,0.0f,1.0f);
+        shader->setUniform("Colour",0.0f,1.0f,0.0f,1.0f);
         prim->draw("sphere");
 
       break;
@@ -224,12 +224,12 @@ void NGLScene::paintGL()
 
   m_bodyTransform.identity();
   m_bodyTransform.translate(m_firePos.m_x,m_firePos.m_y,m_firePos.m_z);
-  shader->setShaderParam4f("Colour",0.0f,0.0f,1.0f,1.0f);
+  shader->setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
   loadMatricesToShader();
   prim->draw("cube");
 
 
-  shader->setShaderParam4f("Colour",1.0f,1.0f,1.0f,1.0f);
+  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
   m_bodyTransform.identity();
   loadMatricesToShader();
