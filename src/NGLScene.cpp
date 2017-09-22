@@ -160,10 +160,10 @@ void NGLScene::loadMatricesToShader()
   ngl::Mat4 MVP;
   ngl::Mat3 normalMatrix;
 
-  MV=  m_bodyTransform*m_globalTransformMatrix*m_cam.getViewMatrix();
-  MVP= MV*m_cam.getVPMatrix();
+  MV= m_cam.getViewMatrix() * m_globalTransformMatrix * m_bodyTransform;
+  MVP= m_cam.getVPMatrix() * MV;
   normalMatrix=MV;
-  normalMatrix.inverse();
+  normalMatrix.inverse().transpose();
   shader->setUniform("MVP",MVP);
   shader->setUniform("normalMatrix",normalMatrix);
 }
@@ -184,7 +184,7 @@ void NGLScene::paintGL()
   rotX.rotateX(m_win.spinXFace);
   rotY.rotateY(m_win.spinYFace);
   // multiply the rotations
-  m_globalTransformMatrix=rotY*rotX;
+  m_globalTransformMatrix=rotX*rotY;
   // add the translations
   m_globalTransformMatrix.m_m[3][0] = m_modelPos.m_x;
   m_globalTransformMatrix.m_m[3][1] = m_modelPos.m_y;
