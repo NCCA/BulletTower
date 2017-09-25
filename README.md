@@ -1,4 +1,4 @@
-#Bullet Physics and NGL
+# Bullet Physics and NGL
 ![alt tag](http://nccastaff.bournemouth.ac.uk/jmacey/GraphicsLib/Demos/BulletTower.png)
 
 Using the Bullet Physics with NGL, the demo has basic wrappers for the Physics world and rigid bodies It then procedurally generates a tower which the user can demolish.
