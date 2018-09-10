@@ -2,10 +2,7 @@
 #include <QGuiApplication>
 
 #include "NGLScene.h"
-#include <ngl/Camera.h>
-#include <ngl/Light.h>
 #include <ngl/Transformation.h>
-#include <ngl/Material.h>
 #include <ngl/NGLInit.h>
 #include <ngl/VAOPrimitives.h>
 #include <ngl/ShaderLib.h>
@@ -94,7 +91,7 @@ NGLScene::~NGLScene()
 
 void NGLScene::resizeGL( int _w, int _h )
 {
-  m_cam.setShape( 45.0f, static_cast<float>( _w ) / _h, 0.05f, 350.0f );
+  m_project=ngl::perspective(45.0f, static_cast<float>( _w ) / _h, 0.05f, 350.0f );
   m_win.width  = static_cast<int>( _w * devicePixelRatio() );
   m_win.height = static_cast<int>( _h * devicePixelRatio() );
 }
@@ -128,14 +125,14 @@ void NGLScene::initializeGL()
   // Now we will create a basic Camera from the graphics library
   // This is a static camera so it only needs to be set once
   // First create Values for the camera position
-  ngl::Vec3 from(0.0f,0.0f,60.0f);
+  ngl::Vec3 from(0.0f,10.0f,120.0f);
   ngl::Vec3 to(0.0f,0.0f,0.0f);
   ngl::Vec3 up(0.0f,1.0f,0.0f);
   // now load to our new camera
-  m_cam.set(from,to,up);
+  m_view=ngl::lookAt(from,to,up);
   // set the shape using FOV 45 Aspect Ratio based on Width and Height
   // The final two are near and far clipping planes of 0.5 and 10
-  m_cam.setShape(50,(float)720.0f/576.0f,0.05f,350.0f);
+  m_project=ngl::perspective(45.0f,720.0f/576.0f,0.05f,350.0f);
 
   ngl::VAOPrimitives *prim = ngl::VAOPrimitives::instance();
   prim->createSphere("sphere",0.5,40);
@@ -160,8 +157,8 @@ void NGLScene::loadMatricesToShader()
   ngl::Mat4 MVP;
   ngl::Mat3 normalMatrix;
 
-  MV= m_cam.getViewMatrix() * m_globalTransformMatrix * m_bodyTransform;
-  MVP= m_cam.getVPMatrix() * MV;
+  MV= m_view * m_globalTransformMatrix * m_bodyTransform;
+  MVP= m_project * MV;
   normalMatrix=MV;
   normalMatrix.inverse().transpose();
   shader->setUniform("MVP",MVP);

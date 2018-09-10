@@ -28,10 +28,8 @@ DESTDIR=./
 
 CONFIG += console
 CONFIG -= app_bundle
-INCLUDEPATH+=/usr/local/include/bullet
-INCLUDEPATH+=/usr/local/include
-LIBS+= -L/usr/local/lib -lBulletDynamics  -lBulletCollision  -lLinearMath
-
+QMAKE_CXXFLAGS+=$$system(pkg-config --cflags bullet)
+LIBS+= $$system(pkg-config --libs bullet)
 NGLPATH=$$(NGLDIR)
 isEmpty(NGLPATH){ # note brace must be here
 	message("including $HOME/NGL")

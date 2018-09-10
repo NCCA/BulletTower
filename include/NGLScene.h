@@ -1,15 +1,12 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
-#include <ngl/Camera.h>
-#include <ngl/Colour.h>
-#include <ngl/Light.h>
+#include <QOpenGLWindow>
+#include <QElapsedTimer>
 #include <ngl/Transformation.h>
 #include <ngl/Text.h>
 #include <ngl/Obj.h>
 #include "WindowParams.h"
 #include <btBulletDynamicsCommon.h>
-#include <QOpenGLWindow>
-#include <QElapsedTimer>
 #include <memory>
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -106,7 +103,8 @@ private:
      //----------------------------------------------------------------------------------------------------------------------
     /// @brief Our Camera
     //----------------------------------------------------------------------------------------------------------------------
-    ngl::Camera m_cam;
+    ngl::Mat4 m_view;
+    ngl::Mat4 m_project;
     //----------------------------------------------------------------------------------------------------------------------
     /// @brief body transform matrix
     //----------------------------------------------------------------------------------------------------------------------
