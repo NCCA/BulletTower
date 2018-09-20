@@ -1,11 +1,11 @@
 #ifndef NGLSCENE_H_
 #define NGLSCENE_H_
-#include <QOpenGLWindow>
-#include <QElapsedTimer>
 #include <ngl/Transformation.h>
 #include <ngl/Text.h>
 #include <ngl/Obj.h>
 #include "WindowParams.h"
+#include <QOpenGLWindow>
+#include <QElapsedTimer>
 #include <btBulletDynamicsCommon.h>
 #include <memory>
 

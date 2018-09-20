@@ -243,6 +243,7 @@ ngl::Vec3 PhysicsWorld::getPosition(unsigned int _index)
 										 trans.getOrigin().getZ()
 										);
 	}
+  else return ngl::Vec3();
 }
 
 
