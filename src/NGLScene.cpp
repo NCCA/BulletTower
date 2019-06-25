@@ -347,8 +347,8 @@ void NGLScene::keyPressEvent(QKeyEvent *_event)
   case Qt::Key_2 : addSphere(); break;
   case Qt::Key_Left : m_rot+=5; break;
   case Qt::Key_Right : m_rot-=5; break;
-  case Qt::Key_Down : m_y-=1.0; break;
-  case Qt::Key_Up : m_y+=1.0; break;
+  case Qt::Key_Down : m_y-=1.0f; break;
+  case Qt::Key_Up : m_y+=1.0f; break;
   case Qt::Key_Plus :
   case Qt::Key_Equal :
     m_numBlocks+=5;
@@ -385,13 +385,13 @@ void NGLScene::timerEvent(QTimerEvent *_e)
 {
   if(m_animate == true)
   {
-    m_physics->step(1.0/60.0,1);
+    m_physics->step(1.0f/60.0f,1);
   }
   update();
 
 }
 void NGLScene::stepAnimation()
 {
-  m_physics->step(1.0/20.0,10);
+  m_physics->step(1.0f/20.0f,10);
 
 }

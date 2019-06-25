@@ -30,10 +30,31 @@ CONFIG += console
 CONFIG -= app_bundle
 QMAKE_CXXFLAGS+=$$system(pkg-config --cflags bullet)
 LIBS+= $$system(pkg-config --libs bullet)
+win32 :{
+    message(Make sure that Bullet is installed using vcpkg install SDL2 )
+  #  message("package dir is" $$VCPK)
+  INCLUDEPATH += $$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\include\
+  INCLUDEPATH += $$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\include\bullet
+
+  PRE_TARGETDEPS+=$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\Bullet3Common.lib
+  LIBS+=-L$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\ -lBullet3Common
+
+  PRE_TARGETDEPS+=$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\BulletCollision.lib
+  LIBS+=-L$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\ -lBulletCollision
+
+  PRE_TARGETDEPS+=$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\BulletDynamics.lib
+  LIBS+=-L$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\ -lBulletDynamics
+
+  PRE_TARGETDEPS+=$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\LinearMath.lib
+  LIBS+=-L$$(HOMEDRIVE)\\$$(HOMEPATH)\vcpkg\installed\x86-windows\lib\ -lLinearMath
+
+}
+
 NGLPATH=$$(NGLDIR)
 isEmpty(NGLPATH){ # note brace must be here
-	message("including $HOME/NGL")
-	include($(HOME)/NGL/UseNGL.pri)
+        !win32:message("including $HOME/NGL")
+        !win32:include($(HOME)/NGL/UseNGL.pri)
+        win32:include($(HOMEDRIVE)\$(HOMEPATH)\NGL\UseNGL.pri)
 }
 else{ # note brace must be here
 	message("Using custom NGL location")
