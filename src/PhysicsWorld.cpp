@@ -3,7 +3,7 @@
 #include <ngl/Obj.h>
 #include <ngl/Quaternion.h>
 #include <ngl/Util.h>
-#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
+//#include <bullet/BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
 
 PhysicsWorld::PhysicsWorld()
 {

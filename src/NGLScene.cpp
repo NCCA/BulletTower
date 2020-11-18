@@ -25,10 +25,9 @@ NGLScene::NGLScene()
   m_bboxDraw=false;
   m_wireframe=false;
   m_physics = new PhysicsWorld();
-  m_physics->setGravity(ngl::Vec3(0,-10,0));
-  m_physics->addGroundPlane(ngl::Vec3(0,0,0),ngl::Vec3(50,0.01,50));
-  ngl::Random *rng=ngl::Random::instance();
-  rng->setSeed();
+  m_physics->setGravity(ngl::Vec3(0.0f,-10.0f,0.0f));
+  m_physics->addGroundPlane(ngl::Vec3(0.0f,0.0f,0.0f),ngl::Vec3(50.0f,0.01f,50.0f));
+  ngl::Random::setSeed();
 
   CollisionShape *shapes=CollisionShape::instance();
 
@@ -76,9 +75,9 @@ void NGLScene::addCube()
 void NGLScene::addSphere()
 {
 
-  ngl::Random *rng=ngl::Random::instance();
+  
   ngl::Vec3 dir=ngl::Vec3(0,m_y,0)-m_firePos;
-  m_physics->addSphere("sphere",m_firePos,dir*5,30,rng->getRandomVec3()*20);
+  m_physics->addSphere("sphere",m_firePos,dir*5,30,ngl::Random::getRandomVec3()*20);
 
 }
 
@@ -100,7 +99,7 @@ void NGLScene::initializeGL()
 {
   // we must call this first before any other GL commands to load and link the
   // gl commands from the lib, if this is not done program will crash
-  ngl::NGLInit::instance();
+  ngl::NGLInit::initialize();
 
   glClearColor(0.4f, 0.4f, 0.4f, 1.0f);			   // Grey Background
   // enable depth testing for drawing
@@ -113,14 +112,11 @@ void NGLScene::initializeGL()
 
   // now to load the shader and set the values
   // grab an instance of shader manager
-  ngl::ShaderLib *shader=ngl::ShaderLib::instance();
-  (*shader)["nglToonShader"]->use();
-  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
-  (*shader)["nglDiffuseShader"]->use();
-  shader->setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
-  shader->setUniform("lightPos",1.0f,1.0f,1.0f);
-  shader->setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
+  ngl::ShaderLib::use("nglDiffuseShader");
+  ngl::ShaderLib::setUniform("Colour",1.0f,1.0f,0.0f,1.0f);
+  ngl::ShaderLib::setUniform("lightPos",1.0f,1.0f,1.0f);
+  ngl::ShaderLib::setUniform("lightDiffuse",1.0f,1.0f,1.0f,1.0f);
 
   // Now we will create a basic Camera from the graphics library
   // This is a static camera so it only needs to be set once
@@ -134,15 +130,14 @@ void NGLScene::initializeGL()
   // The final two are near and far clipping planes of 0.5 and 10
   m_project=ngl::perspective(45.0f,720.0f/576.0f,0.05f,350.0f);
 
-  ngl::VAOPrimitives *prim = ngl::VAOPrimitives::instance();
-  prim->createSphere("sphere",0.5,40);
-  prim->createLineGrid("plane",240,240,40);
+  ngl::VAOPrimitives::createSphere("sphere",0.5,40);
+  ngl::VAOPrimitives::createLineGrid("plane",240,240,40);
 
  startTimer(10);
   // as re-size is not explicitly called we need to do this.
   glViewport(0,0,width(),height());
-  m_text.reset(new  ngl::Text(QFont("Arial",18)));
-  m_text->setScreenSize(this->size().width(),this->size().height());
+  m_text=std::make_unique<ngl::Text>("fonts/Arial.ttf",18);
+  m_text->setScreenSize(width(),height());
   m_x=0.0f;
   m_y=10.0f;
 
@@ -151,8 +146,6 @@ void NGLScene::initializeGL()
 
 void NGLScene::loadMatricesToShader()
 {
-  ngl::ShaderLib *shader=ngl::ShaderLib::instance();
-
   ngl::Mat4 MV;
   ngl::Mat4 MVP;
   ngl::Mat3 normalMatrix;
@@ -161,8 +154,8 @@ void NGLScene::loadMatricesToShader()
   MVP= m_project * MV;
   normalMatrix=MV;
   normalMatrix.inverse().transpose();
-  shader->setUniform("MVP",MVP);
-  shader->setUniform("normalMatrix",normalMatrix);
+  ngl::ShaderLib::setUniform("MVP",MVP);
+  ngl::ShaderLib::setUniform("normalMatrix",normalMatrix);
 }
 
 void NGLScene::paintGL()
@@ -170,9 +163,7 @@ void NGLScene::paintGL()
   // clear the screen and depth buffer
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glViewport(0,0,m_win.width,m_win.height);
-  // grab an instance of the shader manager
-  ngl::ShaderLib *shader=ngl::ShaderLib::instance();
-  (*shader)["nglDiffuseShader"]->use();
+  ngl::ShaderLib::use("nglDiffuseShader");
 
   // Rotation based on the mouse position for our global transform
   ngl::Mat4 rotX;
@@ -189,7 +180,6 @@ void NGLScene::paintGL()
   // set this in the TX stack
 
    // get the VBO instance and draw the built in teapot
-  ngl::VAOPrimitives *prim=ngl::VAOPrimitives::instance();
   unsigned int bodies=m_physics->getNumCollisionObjects();
   for(unsigned int i=1; i<bodies; ++i)
   {
@@ -200,19 +190,19 @@ void NGLScene::paintGL()
     ngl::Mat4 scale;
     scale.scale(BOXW,BOXH,BOXD);
 
-    shader->setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
+    ngl::ShaderLib::setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
     switch(m_physics->getCollisionShape(i))
     {
       case BOX_SHAPE_PROXYTYPE :
-        shader->setUniform("Colour",1.0f,0.0f,0.0f,1.0f);
+        ngl::ShaderLib::setUniform("Colour",1.0f,0.0f,0.0f,1.0f);
         m_bodyTransform*=scale;
         loadMatricesToShader();
 
-        prim->draw("cube");
+        ngl::VAOPrimitives::draw("cube");
       break;
       case SPHERE_SHAPE_PROXYTYPE :
-        shader->setUniform("Colour",0.0f,1.0f,0.0f,1.0f);
-        prim->draw("sphere");
+        ngl::ShaderLib::setUniform("Colour",0.0f,1.0f,0.0f,1.0f);
+        ngl::VAOPrimitives::draw("sphere");
 
       break;
     }
@@ -221,24 +211,20 @@ void NGLScene::paintGL()
 
   m_bodyTransform.identity();
   m_bodyTransform.translate(m_firePos.m_x,m_firePos.m_y,m_firePos.m_z);
-  shader->setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
+  ngl::ShaderLib::setUniform("Colour",0.0f,0.0f,1.0f,1.0f);
   loadMatricesToShader();
-  prim->draw("cube");
+  ngl::VAOPrimitives::draw("cube");
 
 
-  shader->setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
+  ngl::ShaderLib::setUniform("Colour",1.0f,1.0f,1.0f,1.0f);
 
   m_bodyTransform.identity();
   loadMatricesToShader();
 
-  prim->draw("plane");
+  ngl::VAOPrimitives::draw("plane");
   m_text->setColour(1,1,1);
-  QString text=QString("Number of Bodies=%1").arg(bodies-1);
-  m_text->renderText(10,18,text );
-  text=QString("x=%1 y=%2").arg(m_x).arg(m_y);
-  m_text->renderText(10,38,text );
-
-
+  m_text->renderText(10,700,fmt::format("Number of Bodies={}",bodies-1) );
+  m_text->renderText(10,680,fmt::format("x={} y={}",m_x,m_y) );
 }
 
 //----------------------------------------------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 /// shapes this is a singleton so we only have one instance of
 /// each shape.
 ///
-#include <btBulletDynamicsCommon.h>
+#include <bullet/btBulletDynamicsCommon.h>
 #include <unordered_map>
 #include <memory>
 #include <string>

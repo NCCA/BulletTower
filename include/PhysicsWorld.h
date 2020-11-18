@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 
 #include <vector>
-#include <btBulletDynamicsCommon.h>
+#include <bullet/btBulletDynamicsCommon.h>
 #include <ngl/Vec3.h>
 #include <ngl/Mat4.h>
 #include <ngl/Obj.h>

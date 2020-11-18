@@ -6,7 +6,7 @@
 #include "WindowParams.h"
 #include <QOpenGLWindow>
 #include <QElapsedTimer>
-#include <btBulletDynamicsCommon.h>
+#include <bullet/btBulletDynamicsCommon.h>
 #include <memory>
 
 //----------------------------------------------------------------------------------------------------------------------
