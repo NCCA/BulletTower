@@ -47,7 +47,7 @@ target_sources(${TargetName} PRIVATE ${PROJECT_SOURCE_DIR}/src/main.cpp
 # add exe and link libs that must be after the other defines
 target_link_libraries(${TargetName} PRIVATE  NGL Qt::Widgets Qt::OpenGL)
 # add the bullet libs
-target_link_libraries(${TargetName} PRIVATE LinearMath Bullet3Common BulletCollision BulletDynamics BulletSoftBody)
+target_link_libraries(${TargetName} PRIVATE LinearMath Bullet3Common BulletDynamics  BulletCollision  BulletSoftBody)
 
 add_custom_target(CopyShadersAndFonts ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
