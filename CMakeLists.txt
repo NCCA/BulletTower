@@ -49,7 +49,7 @@ target_link_libraries(${TargetName} PRIVATE  NGL Qt::Widgets Qt::OpenGL)
 # add the bullet libs
 target_link_libraries(${TargetName} PRIVATE LinearMath Bullet3Common BulletCollision BulletDynamics BulletSoftBody)
 
-add_custom_target(CopyShadersAndFonts ALL
+add_custom_target(${TargetName}CopyShadersAndFonts ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_CURRENT_SOURCE_DIR}/fonts
     $<TARGET_FILE_DIR:${TargetName}>/fonts
