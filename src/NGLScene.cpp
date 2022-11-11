@@ -8,6 +8,7 @@
 #include <ngl/ShaderLib.h>
 #include <ngl/Random.h>
 #include <ngl/Quaternion.h>
+#include <iostream>
 #include "PhysicsWorld.h"
 #include "CollisionShape.h"
 
